@@ -2,24 +2,19 @@ package c0defather.chameleon;
 
 import android.app.Service;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
-import android.graphics.Rect;
+import android.os.Build;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
-import android.support.v4.view.GestureDetectorCompat;
+import androidx.annotation.Nullable;
+import androidx.core.view.GestureDetectorCompat;
 import android.view.Display;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
-import android.widget.SeekBar;
 
 /**
  * Created by c0defather on 3/29/18.
@@ -32,15 +27,11 @@ public class ChameleonService extends Service {
     private WindowManager.LayoutParams topParams;
     private WindowManager.LayoutParams edgeParams;
     private RelativeLayout topView;
-    private UnmaskRelativeLayout contentView;
     private View topGrab;
     private View edge;
-    private WebView webView;
-    private SeekBar seekBar;
     private WindowManager windowManager;
     private GestureDetectorCompat gestureDetector;
-    private SharedPreferences preferences;
-    private SharedPreferences.Editor editor;
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -53,9 +44,8 @@ public class ChameleonService extends Service {
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         isRunning = true;
         initScreenUtils();
-        preferences = getSharedPreferences(SharedPref.NAME, MODE_PRIVATE);
-        editor = preferences.edit();
-        gestureDetector = new GestureDetectorCompat(this,new GestureDetector.SimpleOnGestureListener(){
+
+        gestureDetector = new GestureDetectorCompat(this, new GestureDetector.SimpleOnGestureListener(){
             @Override
             public boolean onDoubleTap(MotionEvent e) {
                 if (topParams.width == 0) {
@@ -73,19 +63,21 @@ public class ChameleonService extends Service {
         initViews();
         initOnClicks();
         initOnTouches();
-        initProgress();
     }
 
     private void initViews() {
         topView = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.top, null);
-        contentView = (UnmaskRelativeLayout) topView.findViewById(R.id.content);
+        int LAYOUT_FLAG;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        } else {
+            LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_PHONE;
+        }
         topGrab = topView.findViewById(R.id.grab);
-        seekBar = (SeekBar) topView.findViewById(R.id.alphaSeek);
-
         topParams = new WindowManager.LayoutParams(
                 ScreenUtils.width,
                 ScreenUtils.height/2,
-                WindowManager.LayoutParams.TYPE_PHONE,
+                LAYOUT_FLAG,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
         topParams.x = 0;
@@ -98,7 +90,7 @@ public class ChameleonService extends Service {
         edgeParams = new WindowManager.LayoutParams(
                 ScreenUtils.width/20,
                 ScreenUtils.height,
-                WindowManager.LayoutParams.TYPE_PHONE,
+                LAYOUT_FLAG,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
         edgeParams.gravity = Gravity.RIGHT;
@@ -124,66 +116,10 @@ public class ChameleonService extends Service {
                 return true;
             }
         });
-        topView.findViewById(R.id.webButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (webView == null) {
-                    webView = new WebView(getApplicationContext());
-                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                    contentView.addView(webView);
-                    webView.setLayoutParams(layoutParams);
-                    webView.setWebViewClient(new WebViewClient());
-                    webView.loadUrl(preferences.getString(SharedPref.URL, "http://github.com/c0defather"));
-                } else {
-                    contentView.removeView(webView);
-                    webView.destroy();
-                    webView = null;
-                }
-            }
-        });
-    }
-
-    private void initProgress() {
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                topView.findViewById(R.id.content).setAlpha((float) (i/100.0));
-                editor.putInt(SharedPref.ALPHA, i).commit();
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-        int progress = preferences.getInt(SharedPref.ALPHA, 50);
-        topView.findViewById(R.id.content).setAlpha((float) (progress/100.0));
-        seekBar.setProgress(progress);
     }
 
     private void initOnTouches() {
-        contentView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                    case MotionEvent.ACTION_MOVE:
-                        int x = (int)motionEvent.getRawX();
-                        int y = (int)motionEvent.getRawY();
-                        contentView.setUnmaskCircle(new Circle(x-ScreenUtils.width/6,y,ScreenUtils.width/6));
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        contentView.setUnmaskCircle(null);
-                }
-                contentView.invalidate();
-                return true;
-            }
-        });
+
         edge.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {

@@ -1,19 +1,13 @@
 package c0defather.chameleon;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.support.annotation.RequiresApi;
-import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.FrameLayout;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -26,13 +20,10 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 public class MainActivity extends AppCompatActivity {
     private static final int CODE_DRAW_OVER_OTHER_APP_PERMISSION = 1404;
     private ImageButton chameleon;
-    private EditText urlEditText;
     private Intent service;
-    private SharedPreferences preferences;
-    private SharedPreferences.Editor editor;
     private boolean foreground = false;
-    private Handler statusHandler = new Handler();
-    private Runnable statusChecker = new Runnable() {
+    private final Handler statusHandler = new Handler();
+    private final Runnable statusChecker = new Runnable() {
         @Override
         public void run() {
             if (foreground)
@@ -46,8 +37,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         service = new Intent(this, ChameleonService.class);
         service.setFlags(FLAG_ACTIVITY_NEW_TASK);
-        preferences = getSharedPreferences(SharedPref.NAME, MODE_PRIVATE);
-        editor = preferences.edit();
 
         //Check if the application has draw over other apps permission or not?
         //This permission is by default available for API<23. But for API > 23
@@ -60,7 +49,10 @@ public class MainActivity extends AppCompatActivity {
 
             startActivityForResult(intent, CODE_DRAW_OVER_OTHER_APP_PERMISSION);
         } else {
+
             initializeView();
+            changeStatus(true);
+            finish();
         }
     }
 
@@ -68,41 +60,13 @@ public class MainActivity extends AppCompatActivity {
      * Set and initialize the view elements.
      */
     private void initializeView() {
-        urlEditText = (EditText) findViewById(R.id.urlEditText);
         chameleon = (ImageButton) findViewById(R.id.chameleon);
-
-        chameleon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                changeStatus(!ChameleonService.isRunning);
-            }
-        });
-        ((FrameLayout)urlEditText.getParent()).setVisibility(ChameleonService.isRunning ? View.VISIBLE : View.GONE);
-        urlEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                editor.putString(SharedPref.URL, editable.toString()).commit();
-            }
-        });
-        String url = preferences.getString(SharedPref.URL, "http://github.com/c0defather");
-        urlEditText.setText(url);
+        chameleon.setOnClickListener(view -> changeStatus(!ChameleonService.isRunning));
         statusHandler.post(statusChecker);
     }
 
     private void changeStatus(boolean status) {
         chameleon.setImageResource(status? R.mipmap.chameleon_on : R.mipmap.chameleon_off);
-        ((FrameLayout)urlEditText.getParent()).setVisibility(status ? View.VISIBLE : View.GONE);
-
         if (status) {
             startService(service);
         } else {

@@ -13,8 +13,6 @@ import android.widget.Toast;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
-import org.rivchain.R;
-
 /**
  * Created by Vadym Vikulin on 6/23/22.
  */

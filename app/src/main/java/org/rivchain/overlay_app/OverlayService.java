@@ -15,8 +15,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
-import org.rivchain.R;
-
 /**
  * Created by Vadym Vikulin on 6/23/22.
  */

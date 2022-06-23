@@ -1,5 +1,5 @@
 # Khameleon
-Implementation of "Drawing over other apps" for Privacy Screens Android-app, called Khameleon.
+Implementation of "Drawing over other apps", called Khameleon. The app can be used as a sceleton for overlay apps.
 
 Available on PlayMarket <a href="https://play.google.com/store/apps/details?id=c0defather.chameleon">https://play.google.com/store/apps/details?id=c0defather.chameleon</a>
 

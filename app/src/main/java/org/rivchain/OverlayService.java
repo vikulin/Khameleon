@@ -1,4 +1,4 @@
-package c0defather.chameleon;
+package org.rivchain;
 
 import android.app.Service;
 import android.content.Intent;
@@ -18,7 +18,7 @@ import android.widget.RelativeLayout;
 /**
  * Created by Vadym Vikulin on 6/23/22.
  */
-public class ChameleonService extends Service {
+public class OverlayService extends Service {
 
     private WindowManager.LayoutParams topParams;
     private WindowManager windowManager;
@@ -55,7 +55,7 @@ public class ChameleonService extends Service {
         topGrab = topView.findViewById(R.id.grab);
         topParams = new WindowManager.LayoutParams(
                 ScreenUtils.width,
-                ScreenUtils.convertDpToPx(ChameleonService.this, 50),
+                ScreenUtils.convertDpToPx(OverlayService.this, 50),
                 LAYOUT_FLAG,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
@@ -96,7 +96,7 @@ public class ChameleonService extends Service {
                     case MotionEvent.ACTION_DOWN:
                         return true;
                     case MotionEvent.ACTION_MOVE:
-                        topParams.y = Math.max((int) motionEvent.getRawY(), ScreenUtils.convertDpToPx(ChameleonService.this, 50));
+                        topParams.y = Math.max((int) motionEvent.getRawY(), ScreenUtils.convertDpToPx(OverlayService.this, 50));
                         windowManager.updateViewLayout(topView, topParams);
                         return true;
                     case MotionEvent.ACTION_UP:

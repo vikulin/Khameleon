@@ -1,4 +1,4 @@
-package c0defather.chameleon;
+package org.rivchain;
 
 import org.junit.Test;
 

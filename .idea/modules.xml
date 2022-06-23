@@ -7,6 +7,11 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Khameleon.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Khameleon.app.androidTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Khameleon.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Khameleon.app.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Khameleon.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Khameleon.app.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/overlay-app-android.iml" filepath="$PROJECT_DIR$/.idea/modules/overlay-app-android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/overlay-app-android.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/overlay-app-android.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/overlay-app-android.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/overlay-app-android.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/overlay-app-android.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/overlay-app-android.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/overlay-app-android.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/overlay-app-android.app.unitTest.iml" />
     </modules>
   </component>
 </project>

@@ -1,12 +1,11 @@
-package c0defather.chameleon;
+package org.rivchain;
 
 import android.content.Context;
 import android.util.DisplayMetrics;
 
 /**
- * Created by kuanysh on 3/29/18.
+ * Created by Vadym Vikulin on 6/23/22.
  */
-
 public class ScreenUtils {
     public static int height;
     public static int width;

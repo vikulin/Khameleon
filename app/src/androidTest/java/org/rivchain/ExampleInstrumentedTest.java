@@ -1,4 +1,4 @@
-package c0defather.chameleon;
+package org.rivchain;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

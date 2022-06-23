@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="c0defather.chameleon">
+    package="org.rivchain">
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <application
         android:allowBackup="true"
@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"
+        <activity android:name="org.rivchain.MainActivity"
             android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <service
-            android:name=".ChameleonService"
+            android:name="org.rivchain.OverlayService"
             android:enabled="true"
             android:exported="false"/>
     </application>

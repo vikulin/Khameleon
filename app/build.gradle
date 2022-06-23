@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 32
     defaultConfig {
-        applicationId "c0defather.chameleon"
+        applicationId "org.rivchain"
         minSdkVersion 19
         targetSdkVersion 32
         versionCode 3

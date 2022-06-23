@@ -1,4 +1,4 @@
-package c0defather.chameleon;
+package org.rivchain;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -14,9 +14,8 @@ import android.widget.Toast;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 /**
- * Created by c0defather on 3/29/18.
+ * Created by Vadym Vikulin on 6/23/22.
  */
-
 public class MainActivity extends AppCompatActivity {
     private static final int CODE_DRAW_OVER_OTHER_APP_PERMISSION = 1404;
     private ImageButton chameleon;
@@ -27,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void run() {
             if (foreground)
-                chameleon.setImageResource(ChameleonService.isRunning ? R.mipmap.chameleon_on : R.mipmap.chameleon_off);
+                chameleon.setImageResource(OverlayService.isRunning ? R.mipmap.chameleon_on : R.mipmap.chameleon_off);
             statusHandler.postDelayed(this, 500);
         }
     };
@@ -35,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        service = new Intent(this, ChameleonService.class);
+        service = new Intent(this, OverlayService.class);
         service.setFlags(FLAG_ACTIVITY_NEW_TASK);
         //Check if the application has draw over other apps permission or not?
         //This permission is by default available for API<23. But for API > 23
@@ -56,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void initializeView() {
         chameleon = (ImageButton) findViewById(R.id.chameleon);
-        chameleon.setOnClickListener(view -> changeStatus(!ChameleonService.isRunning));
+        chameleon.setOnClickListener(view -> changeStatus(!OverlayService.isRunning));
         statusHandler.post(statusChecker);
     }
 
@@ -78,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
             // Settings activity never returns proper value so instead check with following method
             if (Settings.canDrawOverlays(this)) {
                 initializeView();
+                changeStatus(true);
+                finish();
             } else { //Permission is not available
                 Toast.makeText(this,
                         "Draw over other app permission not available. Closing the application",

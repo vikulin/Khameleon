@@ -1,4 +1,4 @@
-package org.rivchain;
+package org.rivchain.overlay_app;
 
 import android.content.Context;
 import android.util.DisplayMetrics;

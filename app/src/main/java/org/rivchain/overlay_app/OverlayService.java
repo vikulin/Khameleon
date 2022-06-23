@@ -1,4 +1,4 @@
-package org.rivchain;
+package org.rivchain.overlay_app;
 
 import android.app.Service;
 import android.content.Intent;
@@ -14,6 +14,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
+
+import org.rivchain.R;
 
 /**
  * Created by Vadym Vikulin on 6/23/22.

@@ -7,8 +7,8 @@ android {
         applicationId "org.rivchain.overlay_app"
         minSdkVersion 19
         targetSdkVersion 32
-        versionCode 4
-        versionName "1.2.0"
+        versionCode 5
+        versionName "1.3.0"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         setProperty("archivesBaseName", project.getParent().name + "-" + versionName)
     }

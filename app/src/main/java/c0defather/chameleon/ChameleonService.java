@@ -6,9 +6,7 @@ import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.IBinder;
 import androidx.annotation.Nullable;
-import androidx.core.view.GestureDetectorCompat;
 import android.view.Display;
-import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -25,12 +23,9 @@ public class ChameleonService extends Service {
     public static boolean isRunning;
 
     private WindowManager.LayoutParams topParams;
-    private WindowManager.LayoutParams edgeParams;
     private RelativeLayout topView;
     private View topGrab;
-    private View edge;
     private WindowManager windowManager;
-    private GestureDetectorCompat gestureDetector;
 
     @Nullable
     @Override
@@ -44,22 +39,6 @@ public class ChameleonService extends Service {
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         isRunning = true;
         initScreenUtils();
-
-        gestureDetector = new GestureDetectorCompat(this, new GestureDetector.SimpleOnGestureListener(){
-            @Override
-            public boolean onDoubleTap(MotionEvent e) {
-                if (topParams.width == 0) {
-                    topParams.width = ScreenUtils.width;
-                    topView.setVisibility(View.VISIBLE);
-                    windowManager.updateViewLayout(topView, topParams);
-                } else {
-                    topParams.width = 0;
-                    windowManager.updateViewLayout(topView, topParams);
-                    topView.setVisibility(View.GONE);
-                }
-                return true;
-            }
-        });
         initViews();
         initOnClicks();
         initOnTouches();
@@ -76,7 +55,7 @@ public class ChameleonService extends Service {
         topGrab = topView.findViewById(R.id.grab);
         topParams = new WindowManager.LayoutParams(
                 ScreenUtils.width,
-                ScreenUtils.height/2,
+                ScreenUtils.convertDpToPx(ChameleonService.this, 50),
                 LAYOUT_FLAG,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
@@ -84,17 +63,6 @@ public class ChameleonService extends Service {
         topParams.y = 0;
         topParams.gravity = Gravity.TOP | Gravity.RIGHT;
         windowManager.addView(topView, topParams);
-
-
-        edge = new View(getApplicationContext());
-        edgeParams = new WindowManager.LayoutParams(
-                ScreenUtils.width/20,
-                ScreenUtils.height,
-                LAYOUT_FLAG,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                PixelFormat.TRANSLUCENT);
-        edgeParams.gravity = Gravity.RIGHT;
-        windowManager.addView(edge, edgeParams);
     }
 
     private void initScreenUtils() {
@@ -120,12 +88,6 @@ public class ChameleonService extends Service {
 
     private void initOnTouches() {
 
-        edge.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                return gestureDetector.onTouchEvent(motionEvent);
-            }
-        });
         topGrab.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -134,7 +96,7 @@ public class ChameleonService extends Service {
                     case MotionEvent.ACTION_DOWN:
                         return true;
                     case MotionEvent.ACTION_MOVE:
-                        topParams.height = Math.max((int) motionEvent.getRawY(), ScreenUtils.convertDpToPx(ChameleonService.this, 50));
+                        topParams.y = Math.max((int) motionEvent.getRawY(), ScreenUtils.convertDpToPx(ChameleonService.this, 50));
                         windowManager.updateViewLayout(topView, topParams);
                         return true;
                     case MotionEvent.ACTION_UP:
@@ -150,6 +112,5 @@ public class ChameleonService extends Service {
         super.onDestroy();
         isRunning = false;
         if (topView != null) windowManager.removeView(topView);
-        if (edge != null) windowManager.removeView(edge);
     }
 }

@@ -6,7 +6,8 @@ import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.IBinder;
 import androidx.annotation.Nullable;
-import android.view.Display;
+
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -15,17 +16,16 @@ import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
 /**
- * Created by c0defather on 3/29/18.
+ * Created by Vadym Vikulin on 6/23/22.
  */
-
 public class ChameleonService extends Service {
 
-    public static boolean isRunning;
-
     private WindowManager.LayoutParams topParams;
+    private WindowManager windowManager;
     private RelativeLayout topView;
     private View topGrab;
-    private WindowManager windowManager;
+
+    public static boolean isRunning;
 
     @Nullable
     @Override
@@ -66,14 +66,14 @@ public class ChameleonService extends Service {
     }
 
     private void initScreenUtils() {
-        final Display display = windowManager.getDefaultDisplay();
         int statusBarHeight = 0;
         int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
         if (resourceId > 0) {
             statusBarHeight = getResources().getDimensionPixelSize(resourceId);
         }
-        ScreenUtils.width = display.getWidth();
-        ScreenUtils.height = display.getHeight() - statusBarHeight;
+        DisplayMetrics metrics = this.getResources().getDisplayMetrics();
+        ScreenUtils.width = metrics.widthPixels;
+        ScreenUtils.height = metrics.heightPixels - statusBarHeight;
     }
 
     private void initOnClicks() {
